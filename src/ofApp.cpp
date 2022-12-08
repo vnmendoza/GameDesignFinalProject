@@ -25,7 +25,7 @@ void ofApp::setup(){
 	bCtrlKeyDown = false;
 	bLanderLoaded = false;
 	bTerrainSelected = true;
-//	ofSetWindowShape(1024, 768);
+
 	cam.setDistance(10);
 	cam.setNearClip(.1);
 	cam.setFov(65.5);   // approx equivalent to 28mm in 35mm format
@@ -37,10 +37,16 @@ void ofApp::setup(){
 	// setup rudimentary lighting 
 	//
 	initLightingAndMaterials();
+	gameState = Title;
 
 	mars.loadModel("geo/mars-low-5x-v2.obj");
 	mars.setScaleNormalization(false);
 
+	//ship.loadModel("geo/spaceShip.obj");
+	//ship.setScaleNormalization(false);
+	//ship.setScale(0.2, 0.2, 0.2);
+
+	//lander.setScaleNormalization();
 	// create sliders for testing
 	//
 	gui.setup();
@@ -52,7 +58,7 @@ void ofApp::setup(){
 	float start = ofGetElapsedTimef();
 	octree.create(mars.getMesh(0), 20);
 	float end = ofGetElapsedTimef();
-	cout << "Octree Creation Time Elapsed: " << end - start << " seconds\n";
+	//cout << "Octree Creation Time Elapsed: " << end - start << " seconds\n";
 
 	
 	cout << "Number of Verts: " << mars.getMesh(0).getNumVertices() << endl;
@@ -65,7 +71,7 @@ void ofApp::setup(){
 // incrementally update scene (animation)
 //
 void ofApp::update() {
-	
+
 }
 //--------------------------------------------------------------
 void ofApp::draw() {
@@ -91,6 +97,7 @@ void ofApp::draw() {
 	else {
 		ofEnableLighting();              // shaded mode
 		mars.drawFaces();
+		hero.draw();
 		ofMesh mesh;
 		if (bLanderLoaded) {
 			lander.drawFaces();
@@ -204,6 +211,38 @@ void ofApp::drawAxis(ofVec3f location) {
 
 void ofApp::keyPressed(int key) {
 
+	
+	/*
+	switch (gameState)
+	{
+	case Title:
+		if (key == OF_KEY_RETURN)
+			gameState = Play;
+		break;
+	case Play:
+		cout << "Play\n";
+		switch (key)
+		{
+		case 'W':
+		case 'w':
+		case OF_KEY_UP:
+			hero.setFwdPressed(true);
+			break;
+		}
+		break;
+	case End:
+		if (key == ' ')
+		{
+			gameState = Title;
+		}
+		break;
+	default:
+		cout << "error in keyPressed" << endl;
+		break;
+	}
+
+*/
+
 	switch (key) {
 	case 'B':
 	case 'b':
@@ -245,7 +284,12 @@ void ofApp::keyPressed(int key) {
 		break;
 	case 'V':
 		break;
+	case 'W':
 	case 'w':
+	case OF_KEY_UP:
+		hero.setFwdPressed(true);
+		break;
+	case 'i':
 		toggleWireframeMode();
 		break;
 	case OF_KEY_ALT:
@@ -279,6 +323,11 @@ void ofApp::togglePointsDisplay() {
 void ofApp::keyReleased(int key) {
 
 	switch (key) {
+	case 'W':
+	case 'w':
+	case OF_KEY_UP:
+		hero.setFwdPressed(false);
+		break;
 	
 	case OF_KEY_ALT:
 		cam.disableMouseInput();
@@ -342,7 +391,7 @@ void ofApp::mousePressed(int x, int y, int button) {
 		float start = ofGetElapsedTimeMicros();
 		raySelectWithOctree(p);
 		float end = ofGetElapsedTimeMicros();
-		cout << "Ray Intersection Time Elapsed: " << end - start << " microseconds\n";
+		//cout << "Ray Intersection Time Elapsed: " << end - start << " microseconds\n";
 	}
 }
 

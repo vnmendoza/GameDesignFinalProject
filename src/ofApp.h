@@ -5,6 +5,7 @@
 #include  "ofxAssimpModelLoader.h"
 #include "Octree.h"
 #include <glm/gtx/intersect.hpp>
+#include "Agent.h"
 
 
 class ofApp : public ofBaseApp{
@@ -38,7 +39,7 @@ class ofApp : public ofBaseApp{
 		glm::vec3 ofApp::getMousePointOnPlane(glm::vec3 p , glm::vec3 n);
 
 		ofEasyCam cam;
-		ofxAssimpModelLoader mars, lander;
+		ofxAssimpModelLoader mars, lander,ship;
 		ofLight light;
 		Box boundingBox, landerBounds;
 		Box testBox;
@@ -48,10 +49,13 @@ class ofApp : public ofBaseApp{
 		TreeNode selectedNode;
 		glm::vec3 mouseDownPos, mouseLastPos;
 		bool bInDrag = false;
+		enum GameState { Title, Play, End };
+		GameState gameState;
 
 
 		ofxIntSlider numLevels;
 		ofxPanel gui;
+		Player hero;
 
 		bool bAltKeyDown;
 		bool bCtrlKeyDown;
